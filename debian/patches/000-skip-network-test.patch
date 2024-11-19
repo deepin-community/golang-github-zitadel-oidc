@@ -1,0 +1,109 @@
+From: Mathias Gibbens <gibmat@debian.org>
+Description: Skip tests that need Internet access
+Forwarded: not-needed
+diff --git a/pkg/client/client_test.go b/pkg/client/client_test.go
+index 02c408b..aabe71a 100644
+--- a/pkg/client/client_test.go
++++ b/pkg/client/client_test.go
+@@ -9,6 +9,7 @@ import (
+ )
+ 
+ func TestDiscover(t *testing.T) {
++	t.Skip("Skipping test that needs Internet access")
+ 	type wantFields struct {
+ 		UILocalesSupported bool
+ 	}
+diff --git a/pkg/client/rs/resource_server_test.go b/pkg/client/rs/resource_server_test.go
+index 16cb6ad..db17a95 100644
+--- a/pkg/client/rs/resource_server_test.go
++++ b/pkg/client/rs/resource_server_test.go
+@@ -26,81 +26,6 @@ func TestNewResourceServer(t *testing.T) {
+ 		wantFields *wantFields
+ 		wantErr    bool
+ 	}{
+-		{
+-			name: "spotify-full-discovery",
+-			args: args{
+-				issuer:     "https://accounts.spotify.com",
+-				authorizer: nil,
+-				options:    []Option{},
+-			},
+-			wantFields: &wantFields{
+-				issuer:        "https://accounts.spotify.com",
+-				tokenURL:      "https://accounts.spotify.com/api/token",
+-				introspectURL: "",
+-				authFn:        nil,
+-			},
+-			wantErr: false,
+-		},
+-		{
+-			name: "spotify-with-static-tokenurl",
+-			args: args{
+-				issuer:     "https://accounts.spotify.com",
+-				authorizer: nil,
+-				options: []Option{
+-					WithStaticEndpoints(
+-						"https://some.host/token-url",
+-						"",
+-					),
+-				},
+-			},
+-			wantFields: &wantFields{
+-				issuer:        "https://accounts.spotify.com",
+-				tokenURL:      "https://some.host/token-url",
+-				introspectURL: "",
+-				authFn:        nil,
+-			},
+-			wantErr: false,
+-		},
+-		{
+-			name: "spotify-with-static-introspecturl",
+-			args: args{
+-				issuer:     "https://accounts.spotify.com",
+-				authorizer: nil,
+-				options: []Option{
+-					WithStaticEndpoints(
+-						"",
+-						"https://some.host/instrospect-url",
+-					),
+-				},
+-			},
+-			wantFields: &wantFields{
+-				issuer:        "https://accounts.spotify.com",
+-				tokenURL:      "https://accounts.spotify.com/api/token",
+-				introspectURL: "https://some.host/instrospect-url",
+-				authFn:        nil,
+-			},
+-			wantErr: false,
+-		},
+-		{
+-			name: "spotify-with-all-static-endpoints",
+-			args: args{
+-				issuer:     "https://accounts.spotify.com",
+-				authorizer: nil,
+-				options: []Option{
+-					WithStaticEndpoints(
+-						"https://some.host/token-url",
+-						"https://some.host/instrospect-url",
+-					),
+-				},
+-			},
+-			wantFields: &wantFields{
+-				issuer:        "https://accounts.spotify.com",
+-				tokenURL:      "https://some.host/token-url",
+-				introspectURL: "https://some.host/instrospect-url",
+-				authFn:        nil,
+-			},
+-			wantErr: false,
+-		},
+ 		{
+ 			name: "bad-discovery",
+ 			args: args{
+@@ -181,6 +106,7 @@ func TestNewResourceServer(t *testing.T) {
+ }
+ 
+ func TestIntrospect(t *testing.T) {
++	t.Skip("Skipping test that needs Internet access")
+ 	type args struct {
+ 		ctx   context.Context
+ 		rp    ResourceServer
